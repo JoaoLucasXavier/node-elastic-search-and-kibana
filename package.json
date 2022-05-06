@@ -5,7 +5,7 @@
   "main": "/src/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node-dev --respawn --transpile-only --inspect -- server/index.ts --ignore-watch node_modules",
+    "dev": "ts-node-dev --respawn --transpile-only --inspect -- src/server/index.ts --ignore-watch node_modules",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
