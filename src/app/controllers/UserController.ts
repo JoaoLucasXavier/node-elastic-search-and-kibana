@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import elasticSearchClient from '../../libs/elastic-search-client';
 import UserService from '../services/UserService';
 
@@ -26,13 +26,36 @@ export default class UserController {
   }
 
   async getAll(request: Request, response: Response) {
-    const userService = new UserService();
-    const users = userService.getUsers();
-
-    response.json(users);
+    const result = await elasticSearchClient.search({
+      index: 'users',
+      size: 1000,
+    });
+    return response.json(result);
   }
 
-  async findOne(request: Request, response: Response) {}
+  async findOne(request: Request, response: Response) {
+    const { id } = request.params;
+    const result = await elasticSearchClient.search({
+      index: 'users',
+      q: `id:${id}`,
+    });
+    return response.json(result.hits.hits);
+  }
+
+  async findQuery(request: Request, response: Response) {
+    const { field, value } = request.params;
+    const result = await elasticSearchClient.search({
+      index: 'users',
+      body: {
+        query: {
+          match: {
+            [`${field}`]: value,
+          },
+        },
+      },
+    });
+    return response.json(result.hits.hits);
+  }
 
   async create(request: Request, response: Response) {
     const { id, first_name, last_name, email, gender, photo, ip_address }: any =

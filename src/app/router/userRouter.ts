@@ -11,6 +11,8 @@ export default (app: any) => {
 
   router.get('/:id', new UserController().findOne);
 
+  router.get('/query/:field/:value', new UserController().findQuery);
+
   router.post('/', new UserController().create);
 
   router.put('/:id', new UserController().update);
